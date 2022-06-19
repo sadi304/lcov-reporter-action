@@ -23138,7 +23138,7 @@ async function main$1() {
 
 	const lcov = await parse$2(raw);
 	const baselcov = baseRaw && (await parse$2(baseRaw));
-	const body = diff(lcov, baselcov, options).substring(0, MAX_COMMENT_CHARS);
+	let body = diff(lcov, baselcov, options).substring(0, MAX_COMMENT_CHARS);
 	const currentCoverage = percentage(lcov);
 
 	if (shouldDeleteOldComments) {
