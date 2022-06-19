@@ -2,7 +2,7 @@ import { promises as fs } from "fs"
 import core from "@actions/core"
 import { GitHub, context } from "@actions/github"
 
-import { parse } from "./lcov"
+import { parse, percentage } from "./lcov"
 import { diff } from "./comment"
 import { getChangedFiles } from "./get_changes"
 import { deleteOldComments } from "./delete_old_comments"
@@ -20,6 +20,7 @@ async function main() {
 	const shouldDeleteOldComments =
 		core.getInput("delete-old-comments").toLowerCase() === "true"
 	const title = core.getInput("title")
+	const minimumThreshold = core.getInput("threshold");
 
 	const raw = await fs.readFile(lcovFile, "utf-8").catch(err => null)
 	if (!raw) {
@@ -59,6 +60,7 @@ async function main() {
 	const lcov = await parse(raw)
 	const baselcov = baseRaw && (await parse(baseRaw))
 	const body = diff(lcov, baselcov, options).substring(0, MAX_COMMENT_CHARS)
+	const currentCoverage = percentage(lcov);
 
 	if (shouldDeleteOldComments) {
 		await deleteOldComments(githubClient, options, context)
@@ -78,6 +80,11 @@ async function main() {
 			commit_sha: options.commit,
 			body: body,
 		})
+	}
+	console.log(minimumThreshold);
+	console.log(currentCoverage);
+	if (currentCoverage < minimumThreshold) {
+		throw new Error(`The code coverage(${currentCoverage}) is too low. Expected at least ${minimumCoverage}.`);
 	}
 }
 
