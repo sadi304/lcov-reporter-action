@@ -81,10 +81,6 @@ async function main() {
 			body: body,
 		})
 	}
-	console.log(minimumThreshold);
-	console.log(currentCoverage);
-
-	core.setFailed(`${minimumThreshold}, ${currentCoverage}`);
 	if (currentCoverage < minimumThreshold) {
 		throw new Error(`The code coverage(${currentCoverage}) is too low. Expected at least ${minimumCoverage}.`);
 	}

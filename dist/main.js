@@ -23094,9 +23094,12 @@ async function main$1() {
 	const githubClient = new github_2(token);
 	const lcovFile = core$1.getInput("lcov-file") || "./coverage/lcov.info";
 	const baseFile = core$1.getInput("lcov-base");
-	const shouldFilterChangedFiles = core$1.getInput("filter-changed-files").toLowerCase() === 'true';
-	const shouldDeleteOldComments = core$1.getInput("delete-old-comments").toLowerCase() === 'true';
+	const shouldFilterChangedFiles =
+		core$1.getInput("filter-changed-files").toLowerCase() === "true";
+	const shouldDeleteOldComments =
+		core$1.getInput("delete-old-comments").toLowerCase() === "true";
 	const title = core$1.getInput("title");
+	const minimumThreshold = core$1.getInput("threshold");
 
 	const raw = await fs.promises.readFile(lcovFile, "utf-8").catch(err => null);
 	if (!raw) {
@@ -23136,6 +23139,7 @@ async function main$1() {
 	const lcov = await parse$2(raw);
 	const baselcov = baseRaw && (await parse$2(baseRaw));
 	const body = diff(lcov, baselcov, options).substring(0, MAX_COMMENT_CHARS);
+	const currentCoverage = percentage(lcov);
 
 	if (shouldDeleteOldComments) {
 		await deleteOldComments(githubClient, options, github_1);
@@ -23155,6 +23159,9 @@ async function main$1() {
 			commit_sha: options.commit,
 			body: body,
 		});
+	}
+	if (currentCoverage < minimumThreshold) {
+		throw new Error(`The code coverage(${currentCoverage}) is too low. Expected at least ${minimumCoverage}.`);
 	}
 }
 
