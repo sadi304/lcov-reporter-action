@@ -23146,10 +23146,10 @@ async function main$1() {
 	}
 
 	const hasFailed = currentCoverage < minimumThreshold;
-	const errorMessage = `The code coverage(${currentCoverage}) is too low. Expected at least ${minimumThreshold}.`;
+	const errorMessage = `The code coverage(${currentCoverage.toFixed(2)}) is too low. Expected at least ${minimumThreshold}.`;
 
 	if (hasFailed) {
-		body += `\n ${errorMessage}`;
+		body += `\n\n:no_entry: ${errorMessage}`;
 	}
 
 	if (github_1.eventName === "pull_request") {
