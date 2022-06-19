@@ -66,6 +66,13 @@ async function main() {
 		await deleteOldComments(githubClient, options, context)
 	}
 
+	const hasFailed = currentCoverage < minimumThreshold;
+	const errorMessage = `The code coverage(${currentCoverage}) is too low. Expected at least ${minimumThreshold}.`;
+
+	if (hasFailed) {
+		body += `\n ${errorMessage}`;
+	}
+
 	if (context.eventName === "pull_request") {
 		await githubClient.issues.createComment({
 			repo: context.repo.repo,
@@ -81,8 +88,9 @@ async function main() {
 			body: body,
 		})
 	}
-	if (currentCoverage < minimumThreshold) {
-		throw new Error(`The code coverage(${currentCoverage}) is too low. Expected at least ${minimumCoverage}.`);
+
+	if (hasFailed) {
+		throw new Error(errorMessage);
 	}
 }
 
