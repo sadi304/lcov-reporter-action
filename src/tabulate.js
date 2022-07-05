@@ -1,5 +1,5 @@
 import { th, tr, td, table, tbody, a, b, span, fragment } from "./html"
-import { normalisePath } from "./util"
+import { joinPath, normalisePath } from "./util"
 import * as core from "@actions/core"
 
 // Tabulate the lcov data in a HTML table.
@@ -45,13 +45,20 @@ function filterAndNormaliseLcov(lcov, options) {
 }
 
 function shouldBeIncluded(fileName, options) {
-	core.info('in should be included');
 	if (!options.shouldFilterChangedFiles) {
 		return true
 	}
+
+	const mergedPath = options.workingDir ? joinPath([
+		workingDir,
+		fileName.replace(options.prefix, ""),
+	]) : fileName.replace(options.prefix, "");
+
+	core.info(mergedPath);
+	core.info(fileName);
 	core.info(JSON.stringify(options.changedFiles));
-	core.info(fileName.replace(options.prefix, ""));
-	return options.changedFiles.includes(fileName.replace(options.prefix, ""))
+
+	return options.changedFiles.includes(mergedPath);
 }
 
 function toFolder(path) {
@@ -92,8 +99,17 @@ function toRow(file, indent, options) {
 }
 
 function filename(file, indent, options) {
-	const relative = file.file.replace(options.prefix, "")
-	const href = `https://github.com/${options.repository}/blob/${options.commit}${options.workingDir}/${relative}`
+	const relative = file.file.replace(options.prefix, "");
+
+	const href = options.workingDir ? joinPath([
+		'https://github.com',
+		options.repository,
+		blob,
+		options.commit,
+		...options.workingDir ? [options.workingDir] : []
+		relative,
+	])
+
 	const parts = relative.split("/")
 	const last = parts[parts.length - 1]
 	const space = indent ? "&nbsp; &nbsp;" : ""

@@ -38,7 +38,7 @@ async function main() {
 	const options = {
 		repository: context.payload.repository.full_name,
 		prefix: normalisePath(`${process.env.GITHUB_WORKSPACE}/`),
-		workingDir: workingDir ? `${workingDir}` : ''
+		workingDir: workingDir
 	}
 
 	if (context.eventName === "pull_request") {
