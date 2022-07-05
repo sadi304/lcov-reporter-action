@@ -22837,9 +22837,12 @@ function filterAndNormaliseLcov(lcov, options) {
 }
 
 function shouldBeIncluded(fileName, options) {
+	core_11('in should be included');
 	if (!options.shouldFilterChangedFiles) {
 		return true
 	}
+	core_11(JSON.stringify(options.changedFiles));
+	core_11(fileName.replace(options.prefix, ""));
 	return options.changedFiles.includes(fileName.replace(options.prefix, ""))
 }
 
@@ -23039,6 +23042,10 @@ async function getChangedFiles(githubClient, options, context) {
 			`The GitHub API for comparing the base and head commits for this ${context.eventName} event returned ${response.status}, expected 200.`,
 		);
 	}
+	
+	core_11(
+		JSON.stringify(response.data.files)
+	);
 
 	return response.data.files
 		.filter(file => file.status == "modified" || file.status == "added")

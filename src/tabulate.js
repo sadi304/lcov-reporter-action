@@ -1,5 +1,6 @@
 import { th, tr, td, table, tbody, a, b, span, fragment } from "./html"
 import { normalisePath } from "./util"
+import * as core from "@actions/core"
 
 // Tabulate the lcov data in a HTML table.
 export function tabulate(lcov, options) {
@@ -44,9 +45,12 @@ function filterAndNormaliseLcov(lcov, options) {
 }
 
 function shouldBeIncluded(fileName, options) {
+	core.info('in should be included');
 	if (!options.shouldFilterChangedFiles) {
 		return true
 	}
+	core.info(JSON.stringify(options.changedFiles));
+	core.info(fileName.replace(options.prefix, ""));
 	return options.changedFiles.includes(fileName.replace(options.prefix, ""))
 }
 
