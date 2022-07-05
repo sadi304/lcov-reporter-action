@@ -22882,7 +22882,7 @@ function toRow(file, indent, options) {
 
 function filename(file, indent, options) {
 	const relative = file.file.replace(options.prefix, "");
-	const href = `https://github.com/${options.repository}/blob/${options.commit}/${relative}`;
+	const href = `https://github.com/${options.repository}/blob/${options.commit}${options.workingDir}/${relative}`;
 	const parts = relative.split("/");
 	const last = parts[parts.length - 1];
 	const space = indent ? "&nbsp; &nbsp;" : "";
@@ -23100,6 +23100,7 @@ async function main$1() {
 		core$1.getInput("delete-old-comments").toLowerCase() === "true";
 	const title = core$1.getInput("title");
 	const minimumThreshold = core$1.getInput("threshold");
+	const workingDir = core$1.getInput("working-dir");
 
 	const raw = await fs.promises.readFile(lcovFile, "utf-8").catch(err => null);
 	if (!raw) {
@@ -23116,6 +23117,7 @@ async function main$1() {
 	const options = {
 		repository: github_1.payload.repository.full_name,
 		prefix: normalisePath(`${process.env.GITHUB_WORKSPACE}/`),
+		workingDir: workingDir ? `${workingDir}` : ''
 	};
 
 	if (github_1.eventName === "pull_request") {

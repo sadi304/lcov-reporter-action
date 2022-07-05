@@ -119,6 +119,7 @@ test("tabulate should generate a correct table", function() {
 		repository: "example/foo",
 		commit: "2e15bee6fe0df5003389aa5ec894ec0fea2d874a",
 		prefix: "/files/project/",
+		workingDir: ''
 	}
 
 	const html = table(
@@ -326,6 +327,7 @@ test("filtered tabulate should generate a correct table with only changed files"
 		prefix: "/files/project/",
 		shouldFilterChangedFiles: true,
 		changedFiles: ["src/foo.js"],
+		workingDir: ''
 	}
 
 	const html = table(
@@ -487,6 +489,7 @@ test("filtered tabulate should fix backwards slashes in filenames", function() {
 		prefix: "/files/project/",
 		shouldFilterChangedFiles: true,
 		changedFiles: ["src/foo.js"],
+		workingDir: ''
 	}
 
 	const html = table(

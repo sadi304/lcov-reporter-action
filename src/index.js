@@ -21,6 +21,7 @@ async function main() {
 		core.getInput("delete-old-comments").toLowerCase() === "true"
 	const title = core.getInput("title")
 	const minimumThreshold = core.getInput("threshold");
+	const workingDir = core.getInput("working-dir");
 
 	const raw = await fs.readFile(lcovFile, "utf-8").catch(err => null)
 	if (!raw) {
@@ -37,6 +38,7 @@ async function main() {
 	const options = {
 		repository: context.payload.repository.full_name,
 		prefix: normalisePath(`${process.env.GITHUB_WORKSPACE}/`),
+		workingDir: workingDir ? `${workingDir}` : ''
 	}
 
 	if (context.eventName === "pull_request") {
