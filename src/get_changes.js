@@ -22,10 +22,6 @@ export async function getChangedFiles(githubClient, options, context) {
 			`The GitHub API for comparing the base and head commits for this ${context.eventName} event returned ${response.status}, expected 200.`,
 		)
 	}
-	
-	core.info(
-		JSON.stringify(response.data.files)
-	);
 
 	return response.data.files
 		.filter(file => file.status == "modified" || file.status == "added")

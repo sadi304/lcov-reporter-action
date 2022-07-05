@@ -2,7 +2,7 @@
 
 See original repo for details
 
-Added a minimum threshold input to add check for passing action
+Added a minimum threshold & working dir input to add check for passing action
 
 ## Example output
 
@@ -14,6 +14,8 @@ Added a minimum threshold input to add check for passing action
 
 ##### `threshold` (**Optional**)
 Minimum threshold that should be passed for a successful action. Defaults to 0
+##### `working-dir` (**Optional**)
+Working dir to be passed for mono repo structures. Defaults to '' (pass without slashes)
 
 ## Example usage
 
@@ -22,6 +24,7 @@ uses: romeovs/lcov-reporter-action@v0.2.16
 with:
   lcov-file: ./coverage/lcov.info
   threshold: 90
+  working-dir: 'package'
 ```
 
 ## Acknowledgements

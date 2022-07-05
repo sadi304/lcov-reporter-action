@@ -22850,10 +22850,6 @@ function shouldBeIncluded(fileName, options) {
 		fileName.replace(options.prefix, ""),
 	]) : fileName.replace(options.prefix, "");
 
-	core_11(mergedPath);
-	core_11(fileName);
-	core_11(JSON.stringify(options.changedFiles));
-
 	return options.changedFiles.includes(mergedPath);
 }
 
@@ -23062,10 +23058,6 @@ async function getChangedFiles(githubClient, options, context) {
 			`The GitHub API for comparing the base and head commits for this ${context.eventName} event returned ${response.status}, expected 200.`,
 		);
 	}
-	
-	core_11(
-		JSON.stringify(response.data.files)
-	);
 
 	return response.data.files
 		.filter(file => file.status == "modified" || file.status == "added")

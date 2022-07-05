@@ -1,6 +1,5 @@
 import { th, tr, td, table, tbody, a, b, span, fragment } from "./html"
 import { joinPath, normalisePath } from "./util"
-import * as core from "@actions/core"
 
 // Tabulate the lcov data in a HTML table.
 export function tabulate(lcov, options) {
@@ -53,10 +52,6 @@ function shouldBeIncluded(fileName, options) {
 		options.workingDir,
 		fileName.replace(options.prefix, ""),
 	]) : fileName.replace(options.prefix, "");
-
-	core.info(mergedPath);
-	core.info(fileName);
-	core.info(JSON.stringify(options.changedFiles));
 
 	return options.changedFiles.includes(mergedPath);
 }
