@@ -22846,7 +22846,7 @@ function shouldBeIncluded(fileName, options) {
 	}
 
 	const mergedPath = options.workingDir ? joinPath([
-		workingDir,
+		options.workingDir,
 		fileName.replace(options.prefix, ""),
 	]) : fileName.replace(options.prefix, "");
 
