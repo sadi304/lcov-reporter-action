@@ -22794,6 +22794,10 @@ function normalisePath(file) {
 	return file.replace(/\\/g, "/")
 }
 
+function joinPath(paths) {
+	return paths.join('/')
+}
+
 // Tabulate the lcov data in a HTML table.
 function tabulate(lcov, options) {
 	const head = tr(
@@ -22837,13 +22841,20 @@ function filterAndNormaliseLcov(lcov, options) {
 }
 
 function shouldBeIncluded(fileName, options) {
-	core_11('in should be included');
 	if (!options.shouldFilterChangedFiles) {
 		return true
 	}
+
+	const mergedPath = options.workingDir ? joinPath([
+		workingDir,
+		fileName.replace(options.prefix, ""),
+	]) : fileName.replace(options.prefix, "");
+
+	core_11(mergedPath);
+	core_11(fileName);
 	core_11(JSON.stringify(options.changedFiles));
-	core_11(fileName.replace(options.prefix, ""));
-	return options.changedFiles.includes(fileName.replace(options.prefix, ""))
+
+	return options.changedFiles.includes(mergedPath);
 }
 
 function toFolder(path) {
@@ -22885,7 +22896,16 @@ function toRow(file, indent, options) {
 
 function filename(file, indent, options) {
 	const relative = file.file.replace(options.prefix, "");
-	const href = `https://github.com/${options.repository}/blob/${options.commit}${options.workingDir}/${relative}`;
+
+	const href = joinPath([
+		'https://github.com',
+		options.repository,
+		'blob',
+		options.commit,
+		...options.workingDir ? [options.workingDir] : [],
+		relative,
+	]);
+
 	const parts = relative.split("/");
 	const last = parts[parts.length - 1];
 	const space = indent ? "&nbsp; &nbsp;" : "";
@@ -23124,7 +23144,7 @@ async function main$1() {
 	const options = {
 		repository: github_1.payload.repository.full_name,
 		prefix: normalisePath(`${process.env.GITHUB_WORKSPACE}/`),
-		workingDir: workingDir ? `${workingDir}` : ''
+		workingDir: workingDir
 	};
 
 	if (github_1.eventName === "pull_request") {

@@ -3,5 +3,5 @@ export function normalisePath(file) {
 }
 
 export function joinPath(paths) {
-	return paths.map(path => normalisePath(path)).join('/')
+	return paths.join('/')
 }

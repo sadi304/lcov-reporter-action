@@ -101,14 +101,14 @@ function toRow(file, indent, options) {
 function filename(file, indent, options) {
 	const relative = file.file.replace(options.prefix, "");
 
-	const href = options.workingDir ? joinPath([
+	const href = joinPath([
 		'https://github.com',
 		options.repository,
-		blob,
+		'blob',
 		options.commit,
-		...options.workingDir ? [options.workingDir] : []
+		...options.workingDir ? [options.workingDir] : [],
 		relative,
-	])
+	]);
 
 	const parts = relative.split("/")
 	const last = parts[parts.length - 1]
