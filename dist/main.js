@@ -22939,7 +22939,15 @@ function uncovered(file, options) {
 					? `L${range.start}`
 					: `L${range.start}-L${range.end}`;
 			const relative = file.file.replace(options.prefix, "");
-			const href = `https://github.com/${options.repository}/blob/${options.commit}/${relative}#${fragment}`;
+			const href = joinPath([
+				'https://github.com',
+				options.repository,
+				'blob',
+				options.commit,
+				...options.workingDir ? [options.workingDir] : [],
+				`${relative}#${fragment}`,
+			]);
+
 			const text =
 				range.start === range.end
 					? range.start
